@@ -197,6 +197,20 @@ You can modify the `piiCategories` array in `pii-detection.json` to include addi
 }
 ```
 
+## ⚠️ Disclaimer
+
+This sample code is provided for educational and demonstration purposes only. While created by a Microsoft employee based on official Azure AI Services documentation, this repository represents personal work and is not an official Microsoft product or service.
+
+**Important Notes:**
+
+- This code is provided "as-is" without warranty of any kind
+- Microsoft does not provide official support for this sample
+- Users are responsible for testing and validating the code in their own environments
+- Always follow your organization's security and compliance policies when handling PII data
+- Ensure proper data governance and privacy compliance (GDPR, CCPA, etc.) when processing personal information
+
+For official support and documentation, please refer to the [Azure AI Services documentation](https://learn.microsoft.com/en-us/azure/ai-services/).
+
 ## 🤝 Contributing
 
 Feel free to submit issues, fork the repository, and create pull requests for any improvements.
