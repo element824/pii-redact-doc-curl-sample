@@ -1,0 +1,59 @@
+---
+name: Update Repository Settings
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/repository.json'
+  workflow_dispatch: {}
+
+jobs:
+  update-settings:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read repository configuration
+        id: config
+        run: |
+          CONFIG=$(cat .github/repository.json)
+          echo "config=$CONFIG" >> $GITHUB_OUTPUT
+
+      - name: Update repository description and topics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Extract values from the JSON config
+          DESC=$(echo '${{ steps.config.outputs.config }}' | \
+            jq -r '.description')
+          TOPICS=$(echo '${{ steps.config.outputs.config }}' | \
+            jq -c '.topics')
+
+          # Update repository description
+          echo "Updating repository description..."
+          curl -L \
+            -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPO" \
+            -d "{\"description\":\"$DESC\"}"
+
+          # Update repository topics
+          echo "Updating repository topics..."
+          curl -L \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPO/topics" \
+            -d "{\"names\":$TOPICS}"
+
+          echo "Repository settings updated successfully!"
