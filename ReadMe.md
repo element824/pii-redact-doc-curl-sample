@@ -1,15 +1,26 @@
-# PII Detection and Redaction Manual
+# Detect and Redact Personally Identifying Information in Native Documents
 
-This repository contains examples and commands for using Azure Cognitive Services Language API for PII (Personally Identifiable Information) detection and redaction in documents.
+This repository contains examples and commands for using **Azure AI Services Language Service** to detect and redact PII (Personally Identifiable Information) in native documents. This sample demonstrates the implementation of secure credential management using environment variables for PowerShell and cURL-based workflows.
 
-## Prerequisites
+## 📖 Official Documentation
 
-- Azure Cognitive Services Language resource
-- Valid API subscription key
-- Blob storage with SAS tokens (valid for at least 24 hours)
-- Input document and target container configured in `pii-detection.json`
+This sample is based on the official Microsoft documentation:
+**[Detect and redact Personally Identifying Information in native documents (preview)](https://learn.microsoft.com/en-us/azure/ai-services/language-service/personally-identifiable-information/how-to/redact-document-pii)**
 
-## Environment Setup
+## 🚀 About Azure AI Services Language Service
+
+The Azure AI Services Language Service provides advanced natural language processing capabilities, including PII detection and redaction for native documents. This preview feature allows you to automatically identify and redact sensitive information while preserving document formatting.
+
+## ✅ Prerequisites
+
+- **Azure AI Services Language resource** (with PII detection capabilities enabled)
+- Valid API subscription key for the Language Service
+- Azure Blob Storage account with containers for source and target documents
+- SAS tokens with appropriate permissions (valid for at least 24 hours)
+- Input document in supported format (PDF, Word, etc.)
+- PowerShell (for Windows users) or cURL (cross-platform)
+
+## ⚙️ Environment Setup
 
 1. Copy the example environment file and configure your Azure credentials:
 
@@ -17,10 +28,10 @@ This repository contains examples and commands for using Azure Cognitive Service
 Copy-Item .env.example .env
 ```
 
-2. Edit the `.env` file with your actual Azure credentials and storage URLs:
+2. Edit the `.env` file with your actual Azure AI Services credentials and storage URLs:
 
 ```env
-# Azure Cognitive Services Configuration
+# Azure AI Services Language Service Configuration
 AZURE_LANGUAGE_ENDPOINT=https://your-resource-name.cognitiveservices.azure.com
 AZURE_LANGUAGE_API_KEY=your-api-key-here
 
@@ -36,7 +47,7 @@ TARGET_CONTAINER_URL=https://your-storage-account.blob.core.windows.net/target-c
 
 3. **Important**: The `.env` file is already included in `.gitignore` to prevent committing sensitive information.
 
-## Commands
+## 🔧 Commands
 
 ### 1. Submit PII Detection Job
 
@@ -134,7 +145,7 @@ for /f "tokens=1,2 delims==" %i in (.env) do set %i=%j
 curl "%AZURE_LANGUAGE_ENDPOINT%/language/analyze-documents/jobs/{jobId}?api-version=%API_VERSION%" -i -X GET --header "Content-Type: application/json" --header "Ocp-Apim-Subscription-Key: %AZURE_LANGUAGE_API_KEY%"
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 The `pii-detection.json` file contains:
 
@@ -144,14 +155,30 @@ The `pii-detection.json` file contains:
 
 **Security Note**: The JSON file now uses environment variable placeholders instead of hardcoded SAS URLs, making it safe to commit to version control.
 
-## Important Notes
+## 🔍 Supported PII Categories
+
+This sample detects the following PII categories:
+
+- **Person**: Names and personal identifiers
+- **Organization**: Company names and organizational identifiers
+
+You can modify the `piiCategories` array in `pii-detection.json` to include additional categories as supported by the Azure AI Services Language Service.
+
+## 🔐 Security Features
+
+- **Environment Variable Management**: Sensitive information (API keys, SAS tokens) stored in `.env` file
+- **Gitignore Protection**: Prevents accidental commitment of secrets to version control
+- **SAS Token Validation**: Scripts check for required environment variables before execution
+- **Automated Cleanup**: Temporary processed files are automatically removed
+
+## ⚠️ Important Notes
 
 1. **SAS Token Expiry**: Ensure SAS tokens are valid for at least 24 hours
 2. **API Response**: Successfully submitted jobs return HTTP 202 with an `operation-location` header containing the job URL
 3. **Job Status**: Use the job ID from the operation-location to check status
 4. **PowerShell vs cURL**: PowerShell tends to work more reliably for this API on Windows
 
-## Example Job Status Response
+## 📊 Example Job Status Response
 
 ```json
 {
@@ -169,3 +196,21 @@ The `pii-detection.json` file contains:
   }
 }
 ```
+
+## 🤝 Contributing
+
+Feel free to submit issues, fork the repository, and create pull requests for any improvements.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ✍️ Author
+
+**Koushik Nagarajan** ([@element824](https://github.com/element824))
+
+---
+
+⭐ If you found this sample helpful, please consider giving it a star on GitHub!
+
+_This sample demonstrates Azure AI Services Language Service capabilities for PII detection and redaction in native documents. Based on official Microsoft documentation with enhanced security practices._
